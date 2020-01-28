@@ -18,7 +18,7 @@ const formProduto = document.getElementById("form-produto");
 
 const atualizaLista = () => {
     tblProdutos.innerHTML = "";
-    produtos.forEach(({nome, quantidade},index) => {
+    produtos.forEach(({nome, quantidade}, index) => {
         let row = tblProdutos.insertRow(-1);
         row.insertCell().innerHTML = index + 1;
         row.insertCell().innerHTML = nome;
@@ -26,12 +26,26 @@ const atualizaLista = () => {
     });
 };
 
-const adicionaItem = (nome, quantidade) => {
-    if(nome && quantidade){
-        produtos.push({
-            nome: nome,
-            quantidade: quantidade
+const adicionaItem = (inputNome, InputQuantidade) => {
+    if(inputNome && InputQuantidade){
+        // Se o produto já existir, atualiza apenas a quantidade
+        let update = produtos.filter((produto) => {
+            if(produto.nome.toLowerCase() === inputNome.toLowerCase()){
+                produto.nome = inputNome;
+                produto.quantidade += Number(InputQuantidade);
+
+                return produto;
+            }
         });
+
+        // Caso o produto não existir é adicionado
+        if(update.length === 0){
+            produtos.push({
+                nome: inputNome,
+                quantidade: Number(InputQuantidade)
+            });
+        }
+
         formProduto.reset();
         atualizaLista();
     }
